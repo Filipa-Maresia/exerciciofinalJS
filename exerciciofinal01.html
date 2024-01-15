@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercicio final</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<script>
+
+// Para obter os dados, devem-se à seguinte API: https://api.jikan.moe/v4/top/anime
+async function getAnimes() {
+    try {
+        const response = await fetch("https://api.jikan.moe/v4/top/anime");
+        const animeData = await response.json();
+
+// - Deverão mostrar apenas anime com score superior a 9;
+        const filterHighScores = animeData.data.filter(anime => anime.score > 9);
+
+// Criar uma grelha de elementos, usando a imagem e nome;
+
+        const createGrid = document.createElement('div');
+        createGrid.classList.add("anime-grid");
+
+        filterHighScores.forEach(anime => {
+            const gridItem = document.createElement('div');
+            gridItem.classList.add('anime-item');
+
+            const titleElement = document.createElement("h1");
+            titleElement.textContent = anime.title;
+            titleElement.style.fontSize = '16px';
+            gridItem.appendChild(titleElement);
+
+            const imageElement = document.createElement("img");
+            imageElement.src = anime.images.jpg.image_url;
+            imageElement.addEventListener('click', () => showDetails(anime));
+            gridItem.appendChild(imageElement);
+
+            createGrid.appendChild(gridItem);
+        });
+
+        document.body.appendChild(createGrid);
+// O site deverá contar um rodapé com:
+// o ano actual, o símbolo de copyright, e o vosso nome;
+// Deverá estar tudo numa só frase.
+        const footer = document.createElement('footer');
+        const copyrightSymbol = document.createElement('span');
+        copyrightSymbol.innerHTML = '&copy;';
+        const currentYear = new Date().getFullYear();
+        const myName = document.createElement('span');
+        myName.textContent = 'Filipa Mendes';
+
+        footer.innerHTML = `${new Date().toLocaleDateString()} ${copyrightSymbol} ${myName}`;
+        document.body.appendChild(footer);
+
+    } catch (error) {
+        console.error("Not able to show!", error);
+    }
+}
+
+
+// Ao clicar numa imagem, deverá surgir uma secção lateral com vários detalhes do elemento:
+    // ○ Nome;
+    // ○ Rating;
+    // ○ Data de lançamento;
+    // ○ Listar géneros (genre);
+
+function showDetails(anime) {
+    // criar sidebar:
+    const body = document.body;
+    const sidebar = document.createElement('div');
+    sidebar.classList.add('sidebar');
+
+    const detailsContent = document.createElement('div');
+    detailsContent.classList.add('details-content');
+    // criar elementos no side bar:
+    const createDetailsElement = (label, value) => {
+        const element = document.createElement('p');
+        element.textContent = `${label}: ${value}`;
+        return element;
+    };
+    // adicionar ao painel do sidebar
+    detailsContent.appendChild(createDetailsElement('Name', anime.title));
+    detailsContent.appendChild(createDetailsElement('Rating', anime.score));
+    detailsContent.appendChild(createDetailsElement('Release Date', anime.start_date));
+    detailsContent.appendChild(createDetailsElement('Genres', anime.genres.map(genre => genre.name).join(' - ')));
+
+    sidebar.appendChild(detailsContent);
+    document.body.appendChild(sidebar);
+    // adicionar overlay ao documento:
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+
+    body.classList.toggle('sidebar-open');
+
+    // adiciona e retira o sidebar e o overlay ao clicar fora do sidebar:
+    overlay.addEventListener('click', () => {
+        body.classList.remove('sidebar-open');
+        document.body.removeChild(sidebar);
+        document.body.removeChild(overlay);
+    });
+}
+
+getAnimes();
+</script>
+
+</body>
+</html>

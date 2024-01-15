@@ -1,0 +1,73 @@
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.anime-item {
+    text-align: center;
+    border: 1px solid white;
+    padding: 10px;
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 350px;
+    height: 100%;
+    background-color: rgb(238, 187, 242);
+    box-shadow: -5px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    padding: 10px;
+    z-index: 2;
+    transition: 0.3s;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    font-size: 18px;
+}
+
+.sidebar p {
+    margin: 0;
+}
+
+body {
+    margin-right: 0;
+    transition: margin-right 0.3s;
+}
+
+.anime-item {
+    cursor: pointer;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+    display: none;
+}
+
+.sidebar-closed .sidebar,
+.sidebar-closed .overlay {
+    transform: translateX(100%);
+}
+
+.sidebar-open .overlay {
+    display: block;
+}
+
+.sidebar-open body {
+    overflow: hidden;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
